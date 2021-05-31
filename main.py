@@ -35,7 +35,7 @@ PILL_IMAGE = pygame.image.load(os.path.join('assets','pill.png'))
 PILL = pygame.transform.scale(PILL_IMAGE,(70,50))
 
 
-
+#drawing the images onto the screen
 def draw_window(baba,score,pills,handcuffs):
     DISP.blit(BACKGROUND_IMAGE,(0,0))
     DISP.blit(BABA,(baba.x,baba.y)) # drawing a surface on a screen
@@ -51,6 +51,7 @@ def draw_window(baba,score,pills,handcuffs):
 
     pygame.display.update()
 
+#baba catches handcuffs, game pause, showing highscore
 def get_caught(highscore):
     draw_text = FONT_ALL.render("YOU GOT CAUGHT", 1, (255,255,255))
     highscore_text = FONT_ALL.render("NEW HIGHSCORE: "+ str(highscore),1,(255,255,255))
@@ -60,6 +61,7 @@ def get_caught(highscore):
     pygame.display.update()
     pygame.time.delay(7000)
 
+#handling userevent
 def pills_falling(pills,baba,handcuffs):
     for pill in pills:
         random_vel = random.randint(1,7)
@@ -80,7 +82,7 @@ def pills_falling(pills,baba,handcuffs):
             handcuffs.remove(handcuff)
 
 
-
+#handling key presses
 def movement(baba,keys_pressed):
     if keys_pressed[pygame.K_a] and baba.x > 0: # left
         baba.x -= VELOCITY
@@ -103,17 +105,18 @@ def main():
                 pygame.quit()
 
 
-            random_x = random.randint(0,WIDTH-70)
-            random_y = random.randint(-3000,-50)
-
             if len(pills) < 20:
+                random_x = random.randint(0,WIDTH-70)
+                random_y = random.randint(-3000,-50)
                 pill = pygame.Rect(random_x,random_y,70,50)
                 pills.append(pill)
+
             if len(handcuffs) < 5:
                 random_x = random.randint(0,WIDTH-70)
                 random_y = random.randint(-3000,-50)
                 handcuff = pygame.Rect(random_x,random_y,90,55)
                 handcuffs.append(handcuff)
+            
             if event.type == PILL_CATCH:
                 score += 1
             if event.type == GET_CAUGHT:
@@ -124,15 +127,13 @@ def main():
                 handcuffs =[]
                 score = 0
             pygame.display.update()
+
         keys_pressed = pygame.key.get_pressed()
         movement(baba,keys_pressed)
         pills_falling(pills,baba,handcuffs)
         draw_window(baba,score,pills,handcuffs)
-        
-
-    
+    #after baba gets caught, main restarts
     main()
-
 
 if __name__ == "__main__":
     main()
